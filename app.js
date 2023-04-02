@@ -1,6 +1,9 @@
 const express = require('express')
+const sequelize = require('./config/provider/db')
 
 const app = express()
+
+sequelize.sync()
 
 app.get('/', (req, res) => {
   res.send('You are welcome in the name of the lord!')
