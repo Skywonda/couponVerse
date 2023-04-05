@@ -4,12 +4,12 @@ const Coupon = require('./coupon')
 
 // Products belongsTo Category
 Product.belongsTo(Cart, {
-  foreignKey: 'category_id',
+  foreignKey: 'product',
   onDelete: 'SET NULL'
 });
 
 Cart.hasMany(Product, {
-  as: 'product'
+  as: '_id'
 })
 
 module.exports = {

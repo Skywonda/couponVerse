@@ -1,6 +1,9 @@
 const { DataTypes, Model, DECIMAL } = require("sequelize");
 
-const sequelize = require("sequelize");
+const sequelize = require("../config/provider/db");
+
+const Product = require("./product");
+
 
 class Cart extends Model { }
 
@@ -19,12 +22,12 @@ Cart.init(
     product: {
       type: DataTypes.INTEGER,
       references: {
-        model: "Product",
+        model: Product,
         key: "id",
       },
     },
     price: {
-      type: DataTypes.NUMBER,
+      type: DataTypes.INTEGER,
       allowNull: false,
       validate: {
         isDecimal: true,

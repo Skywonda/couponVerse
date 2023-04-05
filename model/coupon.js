@@ -1,6 +1,6 @@
 const { DataTypes, Model, DECIMAL } = require("sequelize");
 
-const sequelize = require("sequelize");
+const sequelize = require("../config/provider/db");
 
 class Coupon extends Model { }
 
@@ -17,55 +17,38 @@ Coupon.init(
       allowNull: false,
       unique: true,
     },
-    rule: {
-      cart_item: {
-        type: DataTypes.NUMBER,
-      },
-      dicount_amount: {
-        type: DataTypes.NUMBER,
-      },
-    },
-    price: {
-      type: DataTypes.NUMBER,
-      allowNull: false,
+
+    // discount
+    discount_amount: {
+      type: DataTypes.INTEGER,
       validate: {
-        isDecimal: true,
+        isNumeric: true,
       },
     },
+    discount_type: {
+      type: DataTypes.ENUM(["FIXED", "PERCENT", "MIXED"]),
+      allowNull: false
+    },
+
+    // rule
+    rule_type: {
+      type: DataTypes.ENUM(["PRICE", "ITEM"]),
+      allowNull: false
+    },
+    rule_value: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
+
     active: {
       type: DataTypes.BOOLEAN,
-      defaultValue: true
-    }
+      defaultValue: true,
+    },
   },
   {
     sequelize,
     timestamps: true,
   }
 );
-
-class Rule extends Model { }
-
-Rule.init({
-  type: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  amount: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-  },
-});
-
-class Discount extends Model { }
-
-Discount.init({
-  amount: {
-    type: DataTypes.NUMBER,
-  },
-  type: DataTypes.ENUM(["FIXED", "PERCENT", "MIXED"]),
-});
-
-Discount.belongsTo(Coupon)
-Rule.belongsTo(Coupon)
 
 module.exports = Coupon;
