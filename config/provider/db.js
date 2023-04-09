@@ -6,11 +6,11 @@ const { db } = config;
 const sequelize = db.server_database
   ? new Sequelize(db.server_database)
   : new Sequelize(db.database_name, db.database_user, db.database_password, {
-    host: "localhost",
+    host: process.env.DB_HOST,
     dialect: "postgres",
-    dialectOptions: {
-      decimalNumbers: true,
-    },
+    // dialectOptions: {
+    //   ssl: true
+    // },
     logging: false,
   });
 
