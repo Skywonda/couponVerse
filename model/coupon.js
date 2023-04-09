@@ -18,28 +18,6 @@ Coupon.init(
       unique: true,
     },
 
-    // discount
-    discount_amount: {
-      type: DataTypes.INTEGER,
-      validate: {
-        isNumeric: true,
-      },
-    },
-    discount_type: {
-      type: DataTypes.ENUM(["FIXED", "PERCENT", "MIXED"]),
-      allowNull: false
-    },
-
-    // rule
-    rule_type: {
-      type: DataTypes.ENUM(["PRICE", "ITEM"]),
-      allowNull: false
-    },
-    rule_value: {
-      type: DataTypes.INTEGER,
-      allowNull: false
-    },
-
     active: {
       type: DataTypes.BOOLEAN,
       defaultValue: true,
@@ -51,4 +29,45 @@ Coupon.init(
   }
 );
 
-module.exports = Coupon;
+class CouponDiscount extends Model { }
+
+CouponDiscount.init(
+  {
+    discount_amount: {
+      type: DataTypes.INTEGER,
+      validate: {
+        isNumeric: true,
+      },
+    },
+    discount_type: {
+      type: DataTypes.ENUM(["FIXED", "PERCENT", "MIXED"]),
+      allowNull: false,
+    },
+  },
+  { sequelize }
+);
+
+class CouponRule extends Model { }
+
+CouponRule.init(
+  {
+    rule_type: {
+      type: DataTypes.ENUM(["PRICE", "ITEM"]),
+      allowNull: false,
+    },
+    rule_value: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+  },
+  {
+    sequelize,
+  }
+);
+
+Coupon.hasMany(CouponDiscount, { as: "discount" });
+Coupon.hasMany(CouponRule, { as: "rule" });
+CouponDiscount.belongsTo(Coupon, { foreignKey: "CouponId", as: "discount" });
+CouponRule.belongsTo(Coupon, { foreignKey: "CouponId", as: "rule" });
+
+module.exports = { Coupon, CouponDiscount, CouponRule };

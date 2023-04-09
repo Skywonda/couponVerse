@@ -5,12 +5,10 @@ const CouponService = require("../service/coupon.service");
 const couponRouter = require("express").Router();
 
 couponRouter.post("/", async (req, res) => {
-  const { discount_amount, discount_type, rule_value, rule_type } = req.body;
+  const { rules, discounts } = req.body;
   const coupon = await CouponService.addCoupon({
-    discount_amount,
-    discount_type,
-    rule_type,
-    rule_value,
+    discounts,
+    rules,
   });
   res.status(201).json({
     status: "success",
@@ -22,6 +20,7 @@ couponRouter.post("/", async (req, res) => {
 couponRouter.get("/display", async (req, res) => {
   const coupon = await CouponService.getAllCoupon({ active: true });
   if (!coupon.length) throw new NotFoundError("coupon is empty!");
+
   res.json({
     status: "success",
     message: "all coupon!",
@@ -33,7 +32,6 @@ couponRouter.get("/", async (req, res) => {
   const { coupon } = req.query;
   const cartItem = await CartService.getCarts();
   const data = await CouponService.getCouponDiscount(coupon, cartItem);
-  console.log(data)
   res.json({ status: "success", message: "coupon applied!", data });
 });
 
