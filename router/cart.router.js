@@ -16,7 +16,7 @@ cartRouter.get("/", async (req, res) => {
   res.json({ cart })
 })
 
-cartRouter.delete("/", async (req, res) => {
+cartRouter.delete("/:id", async (req, res) => {
   const cartId = req.params.id;
   const cart = await CartService.removeItemFromCart(cartId);
   res.json({ status: "success", message: "product added to cart", data: cart });
